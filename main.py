@@ -1,16 +1,15 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import random
 
 app = Flask(__name__)
 
-# Cola de tareas pendientes para Termux
 tareas_pendientes = [
-    "Módulo de trading de R.O.S.A. sincronizado en la nube."
+    "Sistema R.O.S.A. inteligente sincronizado."
 ]
 
 @app.route('/')
 def home():
-    return "Servidor R.O.S.A. de Trading activo 📈"
+    return "Servidor R.O.S.A. activo 🚀"
 
 @app.route('/termux/obtener_tareas', methods=['GET'])
 def obtener_tareas():
@@ -19,32 +18,21 @@ def obtener_tareas():
     tareas_pendientes.clear()
     return jsonify({"tareas": enviar})
 
-@app.route('/enviar_orden/<mensaje>', methods=['GET'])
-def enviar_orden(mensaje):
-    tareas_pendientes.append(mensaje)
-    return jsonify({"estado": "enviado", "orden": mensaje})
-
-# NUEVA RUTA: Analiza el oro (XAUUSD) desde la nube y crea la orden de voz automáticamente
-@app.route('/analizar_oro', methods=['GET'])
-def analizar_oro():
+# RUTA INTELIGENTE: Recibe lo que le mandes, "piensa" la respuesta y la pone en la cola para que hable
+@app.route('/preguntar', methods=['GET'])
+def preguntar():
     global tareas_pendientes
+    comando = request.args.get('q', 'analizar oro')
     
-    # Aquí puedes conectar luego una API real de precios (como MetaTrader o Alpha Vantage)
-    # Por ahora, simularemos un análisis técnico inteligente basado en acción de precio:
-    precio_actual = round(random.uniform(2350.0, 2450.0), 2)
-    tendencias = ["alcista con rebote en soporte clave", "en rango de consolidación esperando ruptura", "bajista testeando zona de alta liquidez"]
-    tendencia_elegida = random.choice(tendencias)
-    
-    reporte = f"Atención. Análisis de oro XAUUSD. Precio actual aproximado en {precio_actual}. El mercado se encuentra {tendencia_elegida}. Monitorear niveles de entrada."
-    
-    # Inyecta el reporte automáticamente a la cola para que Termux hable
-    tareas_pendientes.append(reporte)
-    
-    return jsonify({
-        "estado": "analizado", 
-        "precio": precio_actual, 
-        "reporte": reporte
-    })
+    # Aquí simulamos el razonamiento de la IA (luego puedes conectar tu API key de Gemini si gustas)
+    if "oro" in comando.lower() or "xauusd" in comando.lower():
+        precio = round(random.uniform(2380.0, 2430.0), 2)
+        respuesta = f"Analizando XAUUSD. Precio actual en {precio}. Se detecta presión compradora cerca del soporte institucional. Recomiendo cautela."
+    else:
+        respuesta = f"Comando recibido: {comando}. Procesamiento completado sin anomalías."
+        
+    tareas_pendientes.append(respuesta)
+    return jsonify({"estado": "pensado", "respuesta": respuesta})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
