@@ -1,4 +1,3 @@
-cat << 'EOF' > main.py
 import urllib.request
 import json
 import datetime
@@ -92,4 +91,3 @@ def run():
 
 if __name__ == "__main__":
     run()
-EOF
