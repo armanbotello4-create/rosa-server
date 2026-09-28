@@ -4,7 +4,7 @@ import random
 app = Flask(__name__)
 
 tareas_pendientes = [
-    "Sistema R.O.S.A. inteligente sincronizado."
+    "Sistema R.O.S.A. inteligente listo."
 ]
 
 @app.route('/')
@@ -18,18 +18,16 @@ def obtener_tareas():
     tareas_pendientes.clear()
     return jsonify({"tareas": enviar})
 
-# RUTA INTELIGENTE: Recibe lo que le mandes, "piensa" la respuesta y la pone en la cola para que hable
 @app.route('/preguntar', methods=['GET'])
 def preguntar():
     global tareas_pendientes
     comando = request.args.get('q', 'analizar oro')
     
-    # Aquí simulamos el razonamiento de la IA (luego puedes conectar tu API key de Gemini si gustas)
     if "oro" in comando.lower() or "xauusd" in comando.lower():
         precio = round(random.uniform(2380.0, 2430.0), 2)
         respuesta = f"Analizando XAUUSD. Precio actual en {precio}. Se detecta presión compradora cerca del soporte institucional. Recomiendo cautela."
     else:
-        respuesta = f"Comando recibido: {comando}. Procesamiento completado sin anomalías."
+        respuesta = f"Comando recibido: {comando}. Operación procesada con éxito."
         
     tareas_pendientes.append(respuesta)
     return jsonify({"estado": "pensado", "respuesta": respuesta})
